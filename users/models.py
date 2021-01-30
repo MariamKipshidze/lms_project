@@ -25,3 +25,4 @@ class StudentProfile(models.Model):
             img.thumbnail(output_size)
             img.save(self.image.path)
 
+
