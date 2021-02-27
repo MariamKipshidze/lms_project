@@ -1,46 +1,31 @@
 from .models import StudentProfile
 from .serializers import StudentProfileSerializer
-from django.http import Http404
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import mixins
+from rest_framework import generics
 
 
-class StudentList(APIView):
-    def get(self, request, format=None):
-        students = StudentProfile.objects.all()
-        serializer = StudentProfileSerializer(students, many=True)
-        return Response(serializer.data)
+class StudentList(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
 
-    def post(self, request, format=None):
-        serializer = StudentProfileSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    queryset = StudentProfile.objects.all()
+    serializer_class = StudentProfileSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
 
 
-class StudentDetail(APIView):
-    def get_object(self, pk):
-        try:
-            return StudentProfile.objects.get(pk=pk)
-        except StudentProfile.DoesNotExist:
-            raise Http404
+class StudentDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, generics.GenericAPIView):
+    queryset = StudentProfile.objects.all()
+    serializer_class = StudentProfileSerializer
 
-    def get(self, request, pk, format=None):
-        snippet = self.get_object(pk)
-        serializer = StudentProfileSerializer(snippet)
-        return Response(serializer.data)
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
 
-    def put(self, request, pk, format=None):
-        snippet = self.get_object(pk)
-        serializer = StudentProfileSerializer(snippet, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
 
-    def delete(self, request, pk, format=None):
-        student = self.get_object(pk)
-        student.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+    
