@@ -1,30 +1,31 @@
 from django.contrib import admin
 from .models import User, StudentProfile
-from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.admin import UserAdmin 
+from django.utils.translation import gettext_lazy as _
 
-@admin.register(StudentProfile)
-class StudentProfileModelAdmin(admin.ModelAdmin):
-    search_fields = ("user",)
-    list_display = ["user", ]
-
-class UserAdmin(BaseUserAdmin):
+@admin.register(User)
+class Useradmin(UserAdmin):
+    fieldsets = (
+        (None, {'fields': ('email', 'password')}),
+        (_('Personal info'), {'fields': ('first_name', 'last_name')}),
+        (_('Permissions'), {
+            'fields': ('is_active', 'is_staff', 'is_superuser', 'status', 'user_permissions'),
+        }),
+        (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
+    )
     add_fieldsets = (
         (None, {
-            'fields': ('email', 'username', 'status', 'password1', 'password2',)
+            'classes': ('wide',),
+            'fields': (
+            'email', 'password1', 'password2', 'status'),
         }),
-        ('Permissions', {
-            'fields': ('status',)
-        })
     )
-    fieldsets = (
-        (None, {
-            'fields': ('email', 'password',)
-        }),
-        ('Permissions', {
-            'fields': ("status",)
-        })
-    )
-    list_display = [ 'username', 'status',]
-    search_fields = ( 'username',)
+    list_filter = ('is_staff', 'is_superuser', 'is_active', 'groups')
+    search_fields = ('first_name', 'last_name', 'email')
+    list_display = ('email', 'first_name', 'last_name', 'is_staff')
+    ordering = ['email']
 
-admin.site.register(User, UserAdmin)
+
+@admin.register(StudentProfile)
+class StudentProfileAdmin(admin.ModelAdmin):
+    list_display = ["user"]
