@@ -7,8 +7,10 @@ from PIL import Image
 
 class StudentProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name=_("Student"))
+    first_name = models.CharField(max_length=50, verbose_name=_("First Name"), default="")
+    last_name = models.CharField(max_length=50, verbose_name=_("Last Name"), default="")
     image = models.ImageField(default="default.jpg", upload_to="profile_pics", verbose_name=_("Profile Picture"))
-    gpa = models.DecimalField(max_digits=3, decimal_places=2, verbose_name=_('GPA'), default=0, )
+    gpa = models.DecimalField(max_digits=3, decimal_places=2, verbose_name=_('GPA'), default=0)
 
     def __str__(self):
         return f"{self.user.email} Profile"

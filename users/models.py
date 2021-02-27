@@ -41,8 +41,6 @@ class UserManager(BaseUserManager):
 class User(AbstractUser):
     username = None
     email = models.EmailField(_('Email Address'), unique=True)
-    first_name = models.CharField(max_length=50, verbose_name=_("First Name"))
-    last_name = models.CharField(max_length=50, verbose_name=_("Last Name"))
 
     class Status(IntegerChoices):
         lecturer = 1, _("Lecturer")
