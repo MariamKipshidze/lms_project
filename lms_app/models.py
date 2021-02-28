@@ -8,12 +8,18 @@ from PIL import Image
 class Faculty(models.Model):
     name = models.CharField(max_length=50, verbose_name=_("Faculty name"))
 
+    def __str__(self):
+        return self.name
+
 
 class Subject(models.Model):
     name = models.CharField(max_length=30, verbose_name=_("Subject name"))
     faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE, verbose_name=_("Faculty"))
     credit_score = models.SmallIntegerField(verbose_name=_("Credit Score"))
     lecturer = models.ManyToManyField(User, verbose_name=_("Lecturer"))
+
+    def __str__(self):
+        return self.name
 
 
 class StudentProfile(models.Model):
