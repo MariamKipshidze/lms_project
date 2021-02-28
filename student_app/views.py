@@ -1,6 +1,18 @@
 from .models import StudentProfile
-from .serializers import StudentProfileSerializer
+from users.models import User
+
+from .serializers import StudentProfileSerializer, UserSerializer
 from rest_framework import generics
+
+
+class UserList(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+class UserDetail(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 
 class StudentList(generics.ListCreateAPIView):
