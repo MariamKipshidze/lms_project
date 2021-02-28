@@ -1,5 +1,5 @@
 from django.urls import path
-from student_app import views
+from lms_app import views
 from rest_framework.urlpatterns import format_suffix_patterns
 
 urlpatterns = [
