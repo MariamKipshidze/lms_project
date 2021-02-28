@@ -3,6 +3,7 @@ from users.models import User
 
 from .serializers import StudentProfileSerializer, UserSerializer
 from rest_framework import generics
+from rest_framework import permissions
 
 
 class UserList(generics.ListAPIView):
@@ -16,11 +17,13 @@ class UserDetail(generics.RetrieveAPIView):
 
 
 class StudentList(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     queryset = StudentProfile.objects.all()
     serializer_class = StudentProfileSerializer
 
 
 class StudentDetail(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     queryset = StudentProfile.objects.all()
     serializer_class = StudentProfileSerializer
     
