@@ -1,4 +1,4 @@
-from .models import StudentProfile
+from .models import StudentProfile, Faculty, Subject, LecturerProfile
 from users.models import User
 from .permissions import IsOwnerOrReadOnly
 
@@ -6,6 +6,21 @@ from .serializers import StudentProfileSerializer, UserSerializer, LecturerProfi
 from .serializers import SubjectSerializer, FacultySerializer
 from rest_framework import generics
 from rest_framework import permissions
+
+
+class SubjectList(generics.ListAPIView):
+    queryset = Subject.objects.all()
+    serializer_class = SubjectSerializer
+
+
+class FacultyList(generics.ListAPIView):
+    queryset = Faculty.objects.all()
+    serializer_class = FacultySerializer
+
+
+class LecturerProfileList(generics.ListAPIView):
+    queryset = LecturerProfile.objects.all()
+    serializer_class = LecturerProfileSerializer
 
 
 class UserList(generics.ListAPIView):
