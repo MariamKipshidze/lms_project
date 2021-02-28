@@ -2,7 +2,8 @@ from .models import StudentProfile
 from users.models import User
 from .permissions import IsOwnerOrReadOnly
 
-from .serializers import StudentProfileSerializer, UserSerializer
+from .serializers import StudentProfileSerializer, UserSerializer, LecturerProfileSerializer
+from .serializers import SubjectSerializer, FacultySerializer
 from rest_framework import generics
 from rest_framework import permissions
 

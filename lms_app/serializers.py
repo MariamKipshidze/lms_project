@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import StudentProfile
+from .models import StudentProfile, LecturerProfile, Subject, Faculty
 from users.models import User
 
 
@@ -9,10 +9,33 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ["email", "status"]
 
 
+class SubjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subject
+        fields = ["name", "faculty", "credit_score", "lecturer"]
+
+
+class FacultySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Faculty
+        fields = ["name"]
+
+
 class StudentProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer()
+    faculty = FacultySerializer()
+    subject = SubjectSerializer()
 
     class Meta:
         model = StudentProfile
-        fields = ["user", "faculty", "first_name", "last_name", "gpa", "image", "mobile_number", "subject", "personal_id"]
-        
+        fields = ["user", "faculty", "first_name", "last_name", "gpa", 
+        "image", "mobile_number", "subject", "personal_id"]
+
+
+class LecturerProfileSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+    faculty = FacultySerializer()
+
+    class Meta:
+        model = LecturerProfile
+        fields = ["user", "faculty", "first_name", "last_name", "mobile_number", "personal_id"]
