@@ -22,10 +22,6 @@ class FacultySerializer(serializers.ModelSerializer):
 
 
 class StudentProfileSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
-    faculty = FacultySerializer()
-    subject = SubjectSerializer()
-
     class Meta:
         model = StudentProfile
         fields = ["user", "faculty", "first_name", "last_name", "gpa", 
@@ -33,9 +29,6 @@ class StudentProfileSerializer(serializers.ModelSerializer):
 
 
 class LecturerProfileSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
-    faculty = FacultySerializer()
-
     class Meta:
         model = LecturerProfile
         fields = ["user", "faculty", "first_name", "last_name", "mobile_number", "personal_id"]
