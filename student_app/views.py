@@ -13,7 +13,7 @@ class UserList(generics.ListAPIView):
 
 
 class UserDetail(generics.RetrieveAPIView):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
