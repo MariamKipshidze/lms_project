@@ -10,6 +10,8 @@ urlpatterns = [
     path('faculty/', views.FacultyList.as_view()),
     path('subject/', views.SubjectList.as_view()),
     path('lecturer/profile/', views.LecturerProfileList.as_view()),
+
+    path('subject/detail/<int:pk>/', views.subject_detail),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
