@@ -2,19 +2,17 @@ from .models import StudentProfile, Faculty, Subject, LecturerProfile
 from users.models import User
 from .permissions import IsOwnerOrReadOnly
 
-from .serializers import StudentProfileSerializer, UserSerializer, LecturerProfileSerializer
+from .serializers import StudentProfileSerializer, LecturerProfileSerializer
 from .serializers import SubjectSerializer, FacultySerializer
-from rest_framework import generics
-from rest_framework import permissions
+from users.serializers import UserSerializer
+from rest_framework import generics, permissions, status
 
-from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
-@permission_classes((IsAuthenticated,))
+@permission_classes((permissions.IsAuthenticated,))
 def subject_detail(request, pk, format=None):
     try:
         subject = Subject.objects.get(pk=pk)
@@ -38,7 +36,7 @@ def subject_detail(request, pk, format=None):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
-@permission_classes((IsAuthenticated,))
+@permission_classes((permissions.IsAuthenticated,))
 def faculty_detail(request, pk, format=None):
     try:
         faculty = Faculty.objects.get(pk=pk)
@@ -74,17 +72,6 @@ class FacultyList(generics.ListAPIView):
 class LecturerProfileList(generics.ListAPIView):
     queryset = LecturerProfile.objects.all()
     serializer_class = LecturerProfileSerializer
-
-
-class UserList(generics.ListAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-
-class UserDetail(generics.RetrieveAPIView):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
 
 
 class StudentList(generics.ListCreateAPIView):

@@ -1,12 +1,5 @@
 from rest_framework import serializers
 from .models import StudentProfile, LecturerProfile, Subject, Faculty
-from users.models import User
-
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ["email", "status", "student_profile", "lecturer_profile"]
 
     
 class StudentProfileSerializer(serializers.ModelSerializer):
