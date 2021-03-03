@@ -1,10 +1,8 @@
 from .models import StudentProfile, Faculty, Subject, LecturerProfile
-from users.models import User
 from .permissions import IsOwnerOrReadOnly
 
 from .serializers import StudentProfileSerializer, LecturerProfileSerializer
 from .serializers import SubjectSerializer, FacultySerializer
-from users.serializers import UserSerializer
 from rest_framework import generics, permissions, status
 
 from rest_framework.decorators import api_view, permission_classes
@@ -12,8 +10,8 @@ from rest_framework.response import Response
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
-@permission_classes((permissions.IsAuthenticated,))
-def subject_detail(request, pk, format=None):
+#@permission_classes((permissions.IsAuthenticated,))
+def subject_detail(request, pk):
     try:
         subject = Subject.objects.get(pk=pk)
     except Subject.DoesNotExist:
@@ -36,8 +34,8 @@ def subject_detail(request, pk, format=None):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
-@permission_classes((permissions.IsAuthenticated,))
-def faculty_detail(request, pk, format=None):
+#@permission_classes((permissions.IsAuthenticated,))
+def faculty_detail(request, pk):
     try:
         faculty = Faculty.objects.get(pk=pk)
     except Faculty.DoesNotExist:
@@ -75,7 +73,7 @@ class LecturerProfileList(generics.ListAPIView):
 
 
 class StudentList(generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     queryset = StudentProfile.objects.all()
     serializer_class = StudentProfileSerializer
 
@@ -84,4 +82,3 @@ class StudentDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     queryset = StudentProfile.objects.all()
     serializer_class = StudentProfileSerializer
-    

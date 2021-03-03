@@ -8,9 +8,8 @@ from .serializers import RegistrationSerializer
 from rest_framework.authtoken.models import Token
 
 
-@api_view(['POST', ])
+@api_view(['POST'])
 def user_registration(request):
-
     if request.method == "POST":
         serializer = RegistrationSerializer(data=request.data)
         data = {}
@@ -30,6 +29,6 @@ class UserList(generics.ListAPIView):
 
 
 class UserDetail(generics.RetrieveAPIView):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]
     queryset = User.objects.all()
     serializer_class = UserSerializer
