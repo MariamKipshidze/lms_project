@@ -1,10 +1,10 @@
-from .serializers import UserSerializer
+from .serializers import UserSerializer, RegistrationSerializer
+from .models import User
+from .permissions import IsOwnerOrReadOnly
+
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from .models import User
-
-from .serializers import RegistrationSerializer
 from rest_framework.authtoken.models import Token
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 
@@ -29,8 +29,8 @@ class UserList(generics.ListAPIView):
     serializer_class = UserSerializer
 
 
-class UserDetail(generics.RetrieveAPIView):
+class UserDetail(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [SessionAuthentication, TokenAuthentication]
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
     queryset = User.objects.all()
     serializer_class = UserSerializer
