@@ -6,7 +6,7 @@ app_name = "lms_app"
 
 urlpatterns = [
     path('student/profile/', views.StudentList.as_view()),
-    path('student/profile/<int:pk>/', views.StudentDetail.as_view()),
+    path('student/detail/<int:pk>/', views.StudentDetail.as_view()),
     path('faculty/', views.FacultyList.as_view()),
     path('subject/', views.SubjectList.as_view()),
     path('lecturer/profile/', views.LecturerProfileList.as_view()),
