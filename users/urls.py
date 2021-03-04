@@ -5,8 +5,9 @@ from rest_framework.urlpatterns import format_suffix_patterns
 app_name = "users"
 
 urlpatterns = [
-    path('users/', views.UserList.as_view()),
-    path('user/<int:pk>/', views.UserDetail.as_view()),
+    path('users/', views.UserViewSet.as_view({'get': 'list'})),
+    path('users/<int:pk>/', views.UserViewSet.as_view({'get': 'retrieve'})),
+    path('users/update/<int:pk>/', views.UserViewSet.as_view({'post': 'update', 'get': 'retrieve'})),
     path('register/', views.user_registration),
 ]
 

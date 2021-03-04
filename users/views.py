@@ -5,8 +5,11 @@ from .permissions import IsOwnerOrReadOnly
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from rest_framework import viewsets
 from rest_framework.authtoken.models import Token
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
+
+from django.shortcuts import get_object_or_404
 
 
 @api_view(['POST'])
@@ -24,13 +27,26 @@ def user_registration(request):
         return Response(data)
 
 
-class UserList(generics.ListAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-
-class UserDetail(generics.RetrieveUpdateDestroyAPIView):
+class UserViewSet(viewsets.ViewSet):
     authentication_classes = [SessionAuthentication, TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+
+    @staticmethod
+    def list(request):
+        queryset = User.objects.all()
+        serializer = UserSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    @staticmethod
+    def retrieve(request, pk=None):
+        queryset = User.objects.all()
+        user = get_object_or_404(queryset, pk=pk)
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+
+    @staticmethod
+    def update(request, pk=None):
+        queryset = User.objects.all()
+        user = get_object_or_404(queryset, pk=pk)
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
