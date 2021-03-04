@@ -65,7 +65,6 @@ def faculty_detail(request, pk):
 class SubjectList(generics.ListAPIView):
     queryset = Subject.objects.all()
     serializer_class = SubjectSerializer
-    pagination_class = PageNumberPagination
 
 
 class FacultyList(generics.ListAPIView):
