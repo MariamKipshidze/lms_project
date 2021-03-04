@@ -8,6 +8,7 @@ from rest_framework import generics, permissions, status
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.response import Response
+from rest_framework import viewsets
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -75,15 +76,10 @@ class LecturerProfileList(generics.ListAPIView):
     serializer_class = LecturerProfileSerializer
 
 
-class StudentList(generics.ListCreateAPIView):
-    authentication_classes = [SessionAuthentication, TokenAuthentication]
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    queryset = StudentProfile.objects.all()
-    serializer_class = StudentProfileSerializer
-
-
-class StudentDetail(generics.RetrieveUpdateDestroyAPIView):
+class StudentViewSets(viewsets.ModelViewSet):
     authentication_classes = [SessionAuthentication, TokenAuthentication]
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     queryset = StudentProfile.objects.all()
     serializer_class = StudentProfileSerializer
+
+
