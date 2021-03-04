@@ -9,7 +9,8 @@ from rest_framework.decorators import api_view, permission_classes, authenticati
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.response import Response
 from rest_framework import viewsets
-from rest_framework.pagination import PageNumberPagination
+
+from rest_framework.filters import SearchFilter, OrderingFilter
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -70,6 +71,8 @@ class SubjectList(generics.ListAPIView):
 class FacultyList(generics.ListAPIView):
     queryset = Faculty.objects.all()
     serializer_class = FacultySerializer
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['name']
 
 
 class LecturerProfileList(generics.ListAPIView):
