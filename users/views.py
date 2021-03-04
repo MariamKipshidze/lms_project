@@ -2,7 +2,7 @@ from .serializers import UserSerializer, RegistrationSerializer
 from .models import User
 from .permissions import IsOwnerOrReadOnly
 
-from rest_framework import generics, permissions
+from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import viewsets

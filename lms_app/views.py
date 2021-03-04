@@ -9,6 +9,7 @@ from rest_framework.decorators import api_view, permission_classes, authenticati
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.response import Response
 from rest_framework import viewsets
+from rest_framework.pagination import PageNumberPagination
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -64,6 +65,7 @@ def faculty_detail(request, pk):
 class SubjectList(generics.ListAPIView):
     queryset = Subject.objects.all()
     serializer_class = SubjectSerializer
+    pagination_class = PageNumberPagination
 
 
 class FacultyList(generics.ListAPIView):
@@ -81,5 +83,4 @@ class StudentViewSets(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     queryset = StudentProfile.objects.all()
     serializer_class = StudentProfileSerializer
-
-
+    pagination_class = PageNumberPagination
