@@ -10,7 +10,6 @@ from rest_framework.decorators import api_view, permission_classes, authenticati
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.response import Response
 from rest_framework import viewsets
-
 from rest_framework.filters import SearchFilter, OrderingFilter
 
 
