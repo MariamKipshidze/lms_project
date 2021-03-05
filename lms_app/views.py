@@ -1,5 +1,5 @@
 from .models import StudentProfile, Faculty, Subject, LecturerProfile
-from .permissions import IsOwnerOrReadOnly
+from .permissions import IsOwnerOrReadOnly, IsLecturerOrReadOnly, IsStudentOrReadOnly
 
 from .serializers import StudentProfileSerializer, LecturerProfileSerializer
 from .serializers import SubjectSerializer, FacultySerializer
@@ -15,7 +15,7 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 
 @api_view(['GET', 'PUT', 'DELETE'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
-@permission_classes([permissions.IsAuthenticated])
+@permission_classes([permissions.IsAuthenticated, IsLecturerOrReadOnly])
 def subject_detail(request, pk):
     try:
         subject = Subject.objects.get(pk=pk)
