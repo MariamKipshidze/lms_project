@@ -34,8 +34,13 @@ def subject_detail(request, pk):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':
-        subject.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        operation = subject.delete()
+        data = {}
+        if operation:
+            data["success"] = "Deleted Successfully"
+        else:
+            data["failure"] = "Delete Failed"
+        return Response(data=data)
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -59,8 +64,13 @@ def faculty_detail(request, pk):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':
-        faculty.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        operation = faculty.delete()
+        data = {}
+        if operation:
+            data["success"] = "Deleted Successfully"
+        else:
+            data["failure"] = "Delete Failed"
+        return Response(data=data)
 
 
 class SubjectList(generics.ListAPIView):
