@@ -6,10 +6,6 @@ from django.core.validators import validate_email
 from django.db.models import IntegerChoices
 from django.utils.translation import gettext_lazy as _
 
-
-from django.conf import settings
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 
 
@@ -51,7 +47,7 @@ class User(AbstractUser):
         lecturer = 1, _("Lecturer")
         student = 2, _("Student")
 
-    status = models.PositiveSmallIntegerField(choices=Status.choices, default=Status.lecturer)
+    status = models.PositiveSmallIntegerField(choices=Status.choices)
 
     objects = UserManager()
     USERNAME_FIELD = 'email'
@@ -61,7 +57,7 @@ class User(AbstractUser):
         return self.email
 
 
-@receiver(post_save, sender=settings.AUTH_USER_MODEL)
-def create_auth_token(sender, instance=None, created=False, **kwargs):
-    if created:
-        Token.objects.create(user=instance)
+# @receiver(post_save, sender=settings.AUTH_USER_MODEL)
+# def create_auth_token(sender, instance=None, created=False, **kwargs):
+#     if created:
+#         Token.objects.create(user=instance)

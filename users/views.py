@@ -1,3 +1,5 @@
+from django.db import transaction
+
 from .serializers import UserSerializer, RegistrationSerializer
 from .models import User
 from .permissions import IsOwnerOrReadOnly
@@ -17,13 +19,14 @@ def user_registration(request):
         serializer = RegistrationSerializer(data=request.data)
         data = {}
         if serializer.is_valid():
-            user = serializer.save()
-            data['response'] = "Successfully registered"
-            token = Token.objects.get(user=user).key
-            data['token'] = token
+            with transaction.atomic():
+                user = serializer.save()
+                data['response'] = "Successfully registered"
+                token = Token.objects.create(user=user).key
+                data['token'] = token
         else:
             data = serializer.errors
-        return Response(data)
+    return Response(data)
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -51,6 +54,7 @@ class StudentUserList(generics.ListAPIView):
     queryset = User.objects.filter(status=2)
     filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ['first_name', 'last_name']
+    pagination_class = []
 
 
 class UserDetail(generics.RetrieveUpdateDestroyAPIView):

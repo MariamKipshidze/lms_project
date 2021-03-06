@@ -14,12 +14,11 @@ class IsLecturerOrReadOnly(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        return request.user.status == 1
+        return request.user.status == request.user.Status.lecturer.value
 
 
-class IsStudentOrReadOnly(permissions.BasePermission):
-    def has_object_permission(self, request, view, obj):
-        if request.method in permissions.SAFE_METHODS:
-            return True
-
-        return request.user.status == 2
+class IsStudent(permissions.BasePermission):
+    def has_permission(self, request, view):
+        if request.user.is_authenticated:
+            return request.user.status == request.user.Status.student.value
+        return False

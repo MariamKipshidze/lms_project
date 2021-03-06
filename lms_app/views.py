@@ -1,6 +1,5 @@
 from .models import StudentProfile, Faculty, Subject, LecturerProfile
-from .permissions import IsOwnerOrReadOnly, IsLecturerOrReadOnly, IsStudentOrReadOnly
-from django.contrib.auth.mixins import LoginRequiredMixin
+from .permissions import IsOwnerOrReadOnly, IsLecturerOrReadOnly, IsStudent
 
 from .serializers import StudentProfileSerializer, LecturerProfileSerializer
 from .serializers import SubjectSerializer, FacultySerializer
@@ -78,8 +77,8 @@ class SubjectList(generics.ListAPIView):
     serializer_class = SubjectSerializer
 
 
-class StudentFacultySubjectList(LoginRequiredMixin, generics.ListAPIView):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsStudentOrReadOnly]
+class StudentFacultySubjectList(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated, IsStudent]
     serializer_class = SubjectSerializer
 
     def get_queryset(self):
@@ -100,7 +99,7 @@ class LecturerProfileList(generics.ListAPIView):
 
 
 class StudentViewSets(viewsets.ModelViewSet):
-    authentication_classes = [SessionAuthentication, TokenAuthentication]
+    authentication_classes = [SessionAuthentication]
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     queryset = StudentProfile.objects.all()
     serializer_class = StudentProfileSerializer
