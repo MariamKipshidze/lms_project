@@ -6,8 +6,6 @@ from django.core.validators import validate_email
 from django.db.models import IntegerChoices
 from django.utils.translation import gettext_lazy as _
 
-from rest_framework.authtoken.models import Token
-
 
 class UserManager(BaseUserManager):
     use_in_migrations = True
@@ -55,9 +53,3 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
-
-
-# @receiver(post_save, sender=settings.AUTH_USER_MODEL)
-# def create_auth_token(sender, instance=None, created=False, **kwargs):
-#     if created:
-#         Token.objects.create(user=instance)
