@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import StudentProfile, LecturerProfile, Subject, Faculty
+from .models import StudentProfile, LecturerProfile, Subject, Faculty, ChosenSubject
 
 
 @admin.register(StudentProfile)
@@ -20,3 +20,8 @@ class FacultyAdmin(admin.ModelAdmin):
 @admin.register(Subject)
 class SubjectAdmin(admin.ModelAdmin):
     list_display = ["name", "faculty"]
+
+
+@admin.register(ChosenSubject)
+class ChosenSubjectAdmin(admin.ModelAdmin):
+    list_display = ["student", "subject", "current_score", "passed", "grades"]
