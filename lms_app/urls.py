@@ -8,13 +8,14 @@ router.register(r'students', views.StudentViewSets)
 app_name = "lms_app"
 
 urlpatterns = [
-    path('faculty/', views.FacultyList.as_view()),
-    path('subject/', views.SubjectList.as_view()),
     path('lecturer/profile/', views.LecturerProfileList.as_view()),
     path('student/faculty/subjects/', views.StudentFacultySubjectList.as_view()),
 
-    path('subject/detail/<int:pk>/', views.subject_detail),
-    path('faculty/detail/<int:pk>/', views.faculty_detail),
+    path('subjects/', views.SubjectViewSets.as_view({'get': 'list'})),
+    path('subjects/detail/<int:pk>/', views.SubjectViewSets.as_view({'get': 'retrieve', 'post': 'update'})),
+
+    path('faculty/', views.FacultyViewSets.as_view({'get': 'list'})),
+    path('faculty/detail/<int:pk>/', views.FacultyViewSets.as_view({'get': 'retrieve', 'post': 'update'})),
 
     path("", include(router.urls)),
 ]

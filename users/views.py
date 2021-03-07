@@ -2,8 +2,7 @@ from django.db import transaction
 
 from .serializers import UserSerializer, RegistrationSerializer
 from .models import User
-from .permissions import IsOwnerOrReadOnly
-
+from .permissions import IsOwner
 from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -29,7 +28,7 @@ def user_registration(request):
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated, IsOwner]
     queryset = User.objects.all()
     serializer_class = UserSerializer
     filter_backends = [SearchFilter]
@@ -51,9 +50,3 @@ class StudentUserList(generics.ListAPIView):
     filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ['first_name', 'last_name']
     pagination_class = []
-
-
-class UserDetail(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
-    serializer_class = UserSerializer
-    queryset = User.objects.filter()

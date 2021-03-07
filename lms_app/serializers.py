@@ -9,13 +9,13 @@ class StudentProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentProfile
         fields = ["user", "faculty", "first_name", "last_name", "gpa", 
-                  "image", "mobile_number", "subject", "personal_id"]
+                  "image", "mobile_number", "personal_id"]
 
 
 class SubjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subject
-        fields = ["name", "faculty", "credit_score", "lecturer", "student_subject"]
+        fields = ["name", "faculty", "credit_score", "lecturer"]
 
 
 class FacultySerializer(serializers.ModelSerializer):
