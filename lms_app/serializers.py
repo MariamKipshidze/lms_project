@@ -12,12 +12,6 @@ class StudentProfileSerializer(serializers.ModelSerializer):
                   "image", "mobile_number", "personal_id"]
 
 
-class SubjectSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Subject
-        fields = ["name", "faculty", "credit_score", "lecturer"]
-
-
 class FacultySerializer(serializers.ModelSerializer):
     class Meta:
         model = Faculty
@@ -28,3 +22,10 @@ class LecturerProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = LecturerProfile
         fields = ["user", "faculty", "first_name", "last_name", "mobile_number", "personal_id"]
+
+
+class SubjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subject
+        fields = ["name", "faculty", "credit_score", "lecturer"]
+        depth = 2

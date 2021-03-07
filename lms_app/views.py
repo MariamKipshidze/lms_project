@@ -1,5 +1,5 @@
 from .models import StudentProfile, Subject, LecturerProfile, Faculty
-from .permissions import IsOwnerOrReadOnly, IsLecturer, IsStudent
+from .permissions import IsOwnerOrReadOnly, IsLecturer, IsStudent, IsFacultyLecturerOrReadOnly
 
 from .serializers import StudentProfileSerializer, LecturerProfileSerializer
 from .serializers import SubjectSerializer, FacultySerializer
@@ -42,7 +42,7 @@ class SubjectViewSets(viewsets.ModelViewSet):
 
 
 class FacultyViewSets(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsFacultyLecturerOrReadOnly]
     queryset = Faculty.objects.all()
     serializer_class = FacultySerializer
     filter_backends = [SearchFilter]
