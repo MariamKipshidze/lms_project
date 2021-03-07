@@ -11,9 +11,6 @@ class UserManager(BaseUserManager):
     use_in_migrations = True
 
     def _create_user(self, email, password, **extra_fields):
-        """
-        Create and save a user with the given username, email, and password.
-        """
         validate_email(email)
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
