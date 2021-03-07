@@ -5,11 +5,12 @@ from users.serializers import UserSerializer
     
 class StudentProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer()
+    total_credits = serializers.IntegerField()
 
     class Meta:
         model = StudentProfile
         fields = ["user", "faculty", "first_name", "last_name", "gpa", 
-                  "image", "mobile_number", "personal_id"]
+                  "image", "mobile_number", "personal_id", "total_credits"]
 
 
 class FacultySerializer(serializers.ModelSerializer):

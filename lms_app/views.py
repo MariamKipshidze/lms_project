@@ -1,3 +1,5 @@
+from django.db.models import Sum, Q
+
 from .models import StudentProfile, Subject, LecturerProfile, Faculty
 from .permissions import IsOwnerOrReadOnly, IsLecturer, IsStudent, IsFacultyLecturerOrReadOnly
 
@@ -31,6 +33,11 @@ class StudentViewSets(viewsets.ModelViewSet):
     serializer_class = StudentProfileSerializer
     filter_backends = [SearchFilter]
     search_fields = ['personal_id']
+
+    def get_queryset(self):
+        return StudentProfile.objects.annotate(
+            total_credits=Sum('subject__subject__credit_score', filter=Q(subject__passed=True))
+        )
 
 
 class SubjectViewSets(viewsets.ModelViewSet):
