@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import StudentProfile, LecturerProfile, Subject, Faculty
+from .models import StudentProfile, LecturerProfile, Subject, Faculty, ChosenSubject
 from users.serializers import UserSerializer
 
     
@@ -30,3 +30,9 @@ class SubjectSerializer(serializers.ModelSerializer):
         model = Subject
         fields = ["name", "faculty", "credit_score", "lecturer"]
         depth = 2
+
+
+class ChosenSubjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ChosenSubject
+        fields = ["student", "subject", "current_score", "passed", "grades"]
