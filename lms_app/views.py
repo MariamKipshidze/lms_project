@@ -21,6 +21,8 @@ class StudentChosenSubjectViewSets(viewsets.ModelViewSet):
     def perform_update(self, serializer):
         instance = serializer.save()
         current_score = instance.current_score
+        instance.passed = False
+        instance.grades = 6
 
         if current_score > 90:
             instance.passed = True
@@ -37,9 +39,6 @@ class StudentChosenSubjectViewSets(viewsets.ModelViewSet):
         elif current_score > 50:
             instance.passed = True
             instance.grades = 5
-        else:
-            instance.passed = True
-            instance.grades = 6
 
 
 class StudentFacultySubjectList(generics.ListAPIView):
