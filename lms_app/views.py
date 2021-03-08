@@ -8,45 +8,38 @@ from .serializers import SubjectSerializer, FacultySerializer, ChosenSubjectSeri
 from rest_framework import generics, permissions
 from rest_framework import viewsets
 from rest_framework.filters import SearchFilter
-from rest_framework.response import Response
 
 
 class StudentChosenSubjectViewSets(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated, IsStudent]
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = ChosenSubjectSerializer
 
     def get_queryset(self):
         student = self.request.user.student_profile
         return ChosenSubject.objects.filter(student=student)
 
-    def update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        serializer.is_valid(raise_exception=True)
+    def perform_update(self, serializer):
+        instance = serializer.save()
+        current_score = instance.current_score
 
-        current_score = serializer.validated_data["current_score"]
         if current_score > 90:
-            serializer.validated_data["passed"] = True
-            serializer.validated_data["grades"] = 1
+            instance.passed = True
+            instance.grades = 1
         elif current_score > 80:
-            serializer.validated_data["passed"] = True
-            serializer.validated_data["grades"] = 2
+            instance.passed = True
+            instance.grades = 2
         elif current_score > 70:
-            serializer.validated_data["passed"] = True
-            serializer.validated_data["grades"] = 3
+            instance.passed = True
+            instance.grades = 3
         elif current_score > 60:
-            serializer.validated_data["passed"] = True
-            serializer.validated_data["grades"] = 4
+            instance.passed = True
+            instance.grades = 4
         elif current_score > 50:
-            serializer.validated_data["passed"] = True
-            serializer.validated_data["grades"] = 5
+            instance.passed = True
+            instance.grades = 5
         else:
-            serializer.validated_data["passed"] = False
-            serializer.validated_data["grades"] = 6
-
-        self.perform_update(serializer)
-        return Response(serializer.data)
+            instance.passed = True
+            instance.grades = 6
 
 
 class StudentFacultySubjectList(generics.ListAPIView):
