@@ -1,7 +1,9 @@
 from django.db.models import Sum, Q
+from django.shortcuts import get_object_or_404
 
 from .models import StudentProfile, Subject, LecturerProfile, Faculty, ChosenSubject
 from .permissions import IsOwnerOrReadOnly, IsLecturer, IsStudent, IsFacultyLecturerOrReadOnly
+from .permissions import IsLecturerOrReadOnly
 from .serializers import StudentProfileSerializer, LecturerProfileSerializer
 from .serializers import SubjectSerializer, FacultySerializer, ChosenSubjectSerializer
 
@@ -11,11 +13,11 @@ from rest_framework.filters import SearchFilter
 
 
 class StudentChosenSubjectViewSets(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsLecturerOrReadOnly]
     serializer_class = ChosenSubjectSerializer
 
     def get_queryset(self):
-        student = self.request.user.student_profile
+        student = get_object_or_404(StudentProfile, id=self.kwargs["pk"])
         return ChosenSubject.objects.filter(student=student)
 
     def perform_update(self, serializer):
