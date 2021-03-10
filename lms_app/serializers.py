@@ -32,13 +32,19 @@ class SubjectSerializer(serializers.ModelSerializer):
         depth = 1
 
 
-class CSubjectSerializer(serializers.ModelSerializer):
+class UpdateSubjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChosenSubject
-        fields = ["student", "subject", "current_score", "passed", "grades"]
+        fields = ["current_score"]
 
 
-class CreateCSubjectSerializer(serializers.ModelSerializer):
+class CreateSubjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChosenSubject
         fields = ["student", "subject"]
+
+
+class ChosenSubjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ChosenSubject
+        fields = ["student", "subject", "current_score", "passed", "grades"]

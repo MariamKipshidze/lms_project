@@ -24,4 +24,4 @@ class SubjectAdmin(admin.ModelAdmin):
 
 @admin.register(ChosenSubject)
 class ChosenSubjectAdmin(admin.ModelAdmin):
-    list_display = ["student", "subject", "current_score", "passed", "grades"]
+    list_display = ["id", "student", "subject", "current_score", "passed", "grades"]

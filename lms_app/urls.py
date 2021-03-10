@@ -16,9 +16,9 @@ urlpatterns = [
     path('faculty/', views.FacultyViewSets.as_view({'get': 'list'})),
     path('faculty/detail/<int:pk>/', views.FacultyViewSets.as_view({'get': 'retrieve', 'post': 'update'})),
     path('chosen/subjects/<int:pk>/', views.StudentChosenSubjectViewSets.as_view({'get': 'list',
-                                                                                 'post': 'create'})),
-    path('chosen/subjects/detail/<int:pk>/', views.StudentChosenSubjectViewSets.as_view({'get': 'retrieve',
-                                                                                         'post': 'update'})),
+                                                                                  'post': 'create'})),
+    path('chosen/subjects/detail/<int:id>/<int:pk>/', views.StudentChosenSubjectViewSets.as_view({'get': 'retrieve',
+                                                                                                  'post': 'update'})),
 
     path("", include(router.urls)),
 ]

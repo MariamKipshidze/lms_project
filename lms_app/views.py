@@ -4,8 +4,8 @@ from django.shortcuts import get_object_or_404
 from .models import StudentProfile, Subject, LecturerProfile, Faculty, ChosenSubject
 from .permissions import IsOwnerOrReadOnly, IsLecturer, IsStudent, IsFacultyLecturerOrReadOnly
 from .permissions import IsLecturerOrReadOnly
-from .serializers import StudentProfileSerializer, LecturerProfileSerializer, CreateCSubjectSerializer
-from .serializers import SubjectSerializer, FacultySerializer, CSubjectSerializer
+from .serializers import StudentProfileSerializer, LecturerProfileSerializer, CreateSubjectSerializer
+from .serializers import SubjectSerializer, FacultySerializer, UpdateSubjectSerializer, ChosenSubjectSerializer
 
 from rest_framework import generics, permissions
 from rest_framework import viewsets
@@ -14,16 +14,24 @@ from rest_framework.filters import SearchFilter
 
 class StudentChosenSubjectViewSets(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, IsLecturerOrReadOnly]
+    queryset = ChosenSubject.objects.all()
 
     def get_serializer_class(self):
         action = getattr(self, "action", None)
         if action == "create":
-            return CreateCSubjectSerializer
-        return CSubjectSerializer
+            return CreateSubjectSerializer
+        elif action == "update":
+            return UpdateSubjectSerializer
+        return ChosenSubjectSerializer
 
     def get_queryset(self):
         student = get_object_or_404(StudentProfile, id=self.kwargs["pk"])
         return ChosenSubject.objects.filter(student=student)
+
+    def get_object(self):
+        student = get_object_or_404(StudentProfile, id=self.kwargs["id"])
+        queryset = ChosenSubject.objects.all()
+        return get_object_or_404(queryset, id=self.kwargs["pk"], student=student)
 
     def perform_update(self, serializer):
         instance = serializer.save()
@@ -48,22 +56,6 @@ class StudentChosenSubjectViewSets(viewsets.ModelViewSet):
             instance.grades = 5
 
         instance.save()
-
-
-class StudentFacultySubjectList(generics.ListAPIView):
-    permission_classes = [permissions.IsAuthenticated, IsStudent]
-    serializer_class = SubjectSerializer
-
-    def get_queryset(self):
-        faculty = self.request.user.student_profile.faculty
-        return Subject.objects.filter(faculty=faculty)
-
-
-class LecturerProfileList(generics.ListAPIView):
-    queryset = LecturerProfile.objects.all()
-    serializer_class = LecturerProfileSerializer
-    filter_backends = [SearchFilter]
-    search_fields = ["first_name", "last_name"]
 
 
 class StudentViewSets(viewsets.ModelViewSet):
@@ -93,3 +85,19 @@ class FacultyViewSets(viewsets.ModelViewSet):
     serializer_class = FacultySerializer
     filter_backends = [SearchFilter]
     search_fields = ['name']
+
+
+class StudentFacultySubjectList(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated, IsStudent]
+    serializer_class = SubjectSerializer
+
+    def get_queryset(self):
+        faculty = self.request.user.student_profile.faculty
+        return Subject.objects.filter(faculty=faculty)
+
+
+class LecturerProfileList(generics.ListAPIView):
+    queryset = LecturerProfile.objects.all()
+    serializer_class = LecturerProfileSerializer
+    filter_backends = [SearchFilter]
+    search_fields = ["first_name", "last_name"]
