@@ -69,11 +69,26 @@ class StudentChosenSubjectViewSets(viewsets.ModelViewSet):
 
 
 class StudentViewSets(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly, IsLecturer]
+    permission_classes = [permissions.IsAuthenticated]
     queryset = StudentProfile.objects.all()
     serializer_class = StudentProfileSerializer
     filter_backends = [SearchFilter]
     search_fields = ['personal_id']
+    serializer_per_action = {
+        "list": {"faculty", "first_name", "last_name",
+                 "image", "mobile_number", "personal_id", "total_credits"},
+        "update": {"image", "mobile_number"},
+        "create": {"user", "faculty", "first_name", "last_name", "gpa",
+                   "image", "mobile_number", "personal_id", "total_credits"}
+    }
+
+    def get_serializer(self, *args, **kwargs):
+        fields = self.serializer_per_action.get(
+            getattr(self, "action", None)
+        )
+        if fields:
+            kwargs["fields"] = fields
+        return super().get_serializer(*args, **kwargs)
 
     def get_queryset(self):
         return StudentProfile.objects.annotate(
@@ -90,7 +105,7 @@ class SubjectViewSets(viewsets.ModelViewSet):
 
 
 class FacultyViewSets(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated, IsFacultyLecturerOrReadOnly]
+    permission_classes = [IsFacultyLecturerOrReadOnly]
     queryset = Faculty.objects.all()
     serializer_class = FacultySerializer
     filter_backends = [SearchFilter]
