@@ -31,7 +31,7 @@ class StudentProfileSerializer(DynamicFieldsModelSerializer):
                   "image", "mobile_number", "personal_id", "total_credits"]
 
 
-class LecturerProfileSerializer(serializers.ModelSerializer):
+class LecturerProfileSerializer(DynamicFieldsModelSerializer):
     class Meta:
         model = LecturerProfile
         fields = ["user", "faculty", "first_name", "last_name", "mobile_number", "personal_id"]

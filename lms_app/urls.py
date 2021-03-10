@@ -4,13 +4,13 @@ from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 router.register(r'students', views.StudentViewSets)
+router.register(r'lecturer', views.LecturerViewSets)
 router.register(r'subjects', views.SubjectViewSets)
 router.register(r'faculty', views.FacultyViewSets)
 
 app_name = "lms_app"
 
 urlpatterns = [
-    path('lecturer/profile/', views.LecturerProfileList.as_view()),
     path('student/faculty/subjects/', views.StudentFacultySubjectList.as_view()),
 
     path('chosen/subjects/', views.StudentChosenSubjectViewSets.as_view({'get': 'list',

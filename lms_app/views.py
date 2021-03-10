@@ -96,6 +96,28 @@ class StudentViewSets(viewsets.ModelViewSet):
         )
 
 
+class LecturerViewSets(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = LecturerProfile.objects.all()
+    serializer_class = LecturerProfileSerializer
+    filter_backends = [SearchFilter]
+    search_fields = ['personal_id']
+
+    serializer_per_action = {
+        "list": {"faculty", "first_name", "last_name", "mobile_number"},
+        "update": {"mobile_number"},
+        "create": {"user", "faculty", "first_name", "last_name", "mobile_number", "personal_id"}
+    }
+
+    def get_serializer(self, *args, **kwargs):
+        fields = self.serializer_per_action.get(
+            getattr(self, "action", None)
+        )
+        if fields:
+            kwargs["fields"] = fields
+        return super().get_serializer(*args, **kwargs)
+
+
 class SubjectViewSets(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, IsLecturerOrReadOnly]
     queryset = Subject.objects.all()
@@ -119,10 +141,3 @@ class StudentFacultySubjectList(generics.ListAPIView):
     def get_queryset(self):
         faculty = self.request.user.student_profile.faculty
         return Subject.objects.filter(faculty=faculty)
-
-
-class LecturerProfileList(generics.ListAPIView):
-    queryset = LecturerProfile.objects.all()
-    serializer_class = LecturerProfileSerializer
-    filter_backends = [SearchFilter]
-    search_fields = ["first_name", "last_name"]
