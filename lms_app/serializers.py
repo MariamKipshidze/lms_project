@@ -29,22 +29,23 @@ class SubjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subject
         fields = ["name", "faculty", "credit_score", "lecturer"]
-        depth = 1
 
 
-class UpdateSubjectSerializer(serializers.ModelSerializer):
+class UpdateChosenSubjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChosenSubject
-        fields = ["current_score"]
+        fields = ["student", "subject", "current_score"]
 
 
-class CreateSubjectSerializer(serializers.ModelSerializer):
+class CreateChosenSubjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChosenSubject
-        fields = ["student", "subject"]
+        fields = ["subject"]
 
 
 class ChosenSubjectSerializer(serializers.ModelSerializer):
+    subject = SubjectSerializer()
+
     class Meta:
         model = ChosenSubject
         fields = ["student", "subject", "current_score", "passed", "grades"]

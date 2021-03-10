@@ -4,6 +4,8 @@ from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 router.register(r'students', views.StudentViewSets)
+router.register(r'subjects', views.SubjectViewSets)
+router.register(r'faculty', views.FacultyViewSets)
 
 app_name = "lms_app"
 
@@ -11,14 +13,13 @@ urlpatterns = [
     path('lecturer/profile/', views.LecturerProfileList.as_view()),
     path('student/faculty/subjects/', views.StudentFacultySubjectList.as_view()),
 
-    path('subjects/', views.SubjectViewSets.as_view({'get': 'list'})),
-    path('subjects/detail/<int:pk>/', views.SubjectViewSets.as_view({'get': 'retrieve', 'post': 'update'})),
-    path('faculty/', views.FacultyViewSets.as_view({'get': 'list'})),
-    path('faculty/detail/<int:pk>/', views.FacultyViewSets.as_view({'get': 'retrieve', 'post': 'update'})),
-    path('chosen/subjects/<int:pk>/', views.StudentChosenSubjectViewSets.as_view({'get': 'list',
-                                                                                  'post': 'create'})),
-    path('chosen/subjects/detail/<int:id>/<int:pk>/', views.StudentChosenSubjectViewSets.as_view({'get': 'retrieve',
-                                                                                                  'post': 'update'})),
+    path('chosen/subjects/', views.StudentChosenSubjectViewSets.as_view({'get': 'list',
+                                                                         'post': 'create'})),
+    path('chosen/subjects/detail/<int:pk>/', views.StudentChosenSubjectViewSets.as_view({'get': 'retrieve',
+                                                                                         'delete': 'destroy'})),
+
+    path('chosen/subjects/update/<int:pk>/', views.ChosenSubjectViewSet.as_view({'get': 'retrieve',
+                                                                                 'post': 'update'})),
 
     path("", include(router.urls)),
 ]

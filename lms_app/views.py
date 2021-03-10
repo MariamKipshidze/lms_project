@@ -4,34 +4,23 @@ from django.shortcuts import get_object_or_404
 from .models import StudentProfile, Subject, LecturerProfile, Faculty, ChosenSubject
 from .permissions import IsOwnerOrReadOnly, IsLecturer, IsStudent, IsFacultyLecturerOrReadOnly
 from .permissions import IsLecturerOrReadOnly
-from .serializers import StudentProfileSerializer, LecturerProfileSerializer, CreateSubjectSerializer
-from .serializers import SubjectSerializer, FacultySerializer, UpdateSubjectSerializer, ChosenSubjectSerializer
+from .serializers import StudentProfileSerializer, LecturerProfileSerializer, CreateChosenSubjectSerializer
+from .serializers import SubjectSerializer, FacultySerializer, UpdateChosenSubjectSerializer, ChosenSubjectSerializer
 
 from rest_framework import generics, permissions
 from rest_framework import viewsets
 from rest_framework.filters import SearchFilter
 
 
-class StudentChosenSubjectViewSets(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated, IsLecturerOrReadOnly]
+class ChosenSubjectViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, IsLecturer]
     queryset = ChosenSubject.objects.all()
 
     def get_serializer_class(self):
         action = getattr(self, "action", None)
-        if action == "create":
-            return CreateSubjectSerializer
-        elif action == "update":
-            return UpdateSubjectSerializer
+        if action == "update":
+            return UpdateChosenSubjectSerializer
         return ChosenSubjectSerializer
-
-    def get_queryset(self):
-        student = get_object_or_404(StudentProfile, id=self.kwargs["pk"])
-        return ChosenSubject.objects.filter(student=student)
-
-    def get_object(self):
-        student = get_object_or_404(StudentProfile, id=self.kwargs["id"])
-        queryset = ChosenSubject.objects.all()
-        return get_object_or_404(queryset, id=self.kwargs["pk"], student=student)
 
     def perform_update(self, serializer):
         instance = serializer.save()
@@ -58,6 +47,27 @@ class StudentChosenSubjectViewSets(viewsets.ModelViewSet):
         instance.save()
 
 
+class StudentChosenSubjectViewSets(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, IsStudent]
+    filter_backends = [SearchFilter]
+    search_fields = ['subject__name']
+
+    def get_serializer_class(self):
+        action = getattr(self, "action", None)
+        if action == "create":
+            return CreateChosenSubjectSerializer
+        return ChosenSubjectSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(student=self.request.user.student_profile)
+
+    def get_queryset(self):
+        return ChosenSubject.objects.filter(student=self.request.user.student_profile)
+
+    def get_object(self):
+        return get_object_or_404(ChosenSubject, student=self.request.user.student_profile, id=self.kwargs["pk"])
+
+
 class StudentViewSets(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly, IsLecturer]
     queryset = StudentProfile.objects.all()
@@ -72,7 +82,7 @@ class StudentViewSets(viewsets.ModelViewSet):
 
 
 class SubjectViewSets(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsLecturerOrReadOnly]
     queryset = Subject.objects.all()
     serializer_class = SubjectSerializer
     filter_backends = [SearchFilter]
