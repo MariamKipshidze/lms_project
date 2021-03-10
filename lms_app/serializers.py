@@ -3,13 +3,25 @@ from .models import StudentProfile, LecturerProfile, Subject, Faculty, ChosenSub
 from users.serializers import UserSerializer
 
 
+class DynamicFieldsModelSerializer(serializers.ModelSerializer):
+    def __init__(self, *args, **kwargs):
+        fields = kwargs.pop('fields', None)
+        super(DynamicFieldsModelSerializer, self).__init__(*args, **kwargs)
+
+        if fields is not None:
+            allowed = set(fields)
+            existing = set(self.fields)
+            for field_name in existing - allowed:
+                self.fields.pop(field_name)
+
+
 class FacultySerializer(serializers.ModelSerializer):
     class Meta:
         model = Faculty
         fields = ["name", "student"]
 
     
-class StudentProfileSerializer(serializers.ModelSerializer):
+class StudentProfileSerializer(DynamicFieldsModelSerializer):
     user = UserSerializer()
     total_credits = serializers.IntegerField()
 
@@ -38,6 +50,10 @@ class UpdateChosenSubjectSerializer(serializers.ModelSerializer):
 
 
 class CreateChosenSubjectSerializer(serializers.ModelSerializer):
+    # def __init__(self, faculty, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     self.fields['subject'].queryset = self.fields['subject'].queryset.filter(faculty=faculty)
+
     class Meta:
         model = ChosenSubject
         fields = ["subject"]
