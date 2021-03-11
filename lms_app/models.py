@@ -46,7 +46,7 @@ class StudentProfile(models.Model):
     mobile_number = models.CharField(max_length=20, verbose_name=_("Mobile Number"))
     personal_id = models.CharField(max_length=11, verbose_name=_("Personal ID"), unique=True)
     image = models.ImageField(default="default.jpg", upload_to="profile_pics", verbose_name=_("Profile Picture"))
-    gpa = models.DecimalField(max_digits=3, decimal_places=2, verbose_name=_('GPA'))
+    gpa = models.DecimalField(max_digits=3, decimal_places=2, verbose_name=_('GPA'), default=0)
 
     def __str__(self):
         return f"{self.user.email} {self.user.last_name} Profile"

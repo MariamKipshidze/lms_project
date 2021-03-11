@@ -15,12 +15,15 @@ from rest_framework.filters import SearchFilter
 class ChosenSubjectViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, IsLecturer]
     queryset = ChosenSubject.objects.all()
+    serializer_class = ChosenSubjectSerializer
+    serializer_per_action = {
+        "update": UpdateChosenSubjectSerializer
+    }
 
     def get_serializer_class(self):
-        action = getattr(self, "action", None)
-        if action == "update":
-            return UpdateChosenSubjectSerializer
-        return ChosenSubjectSerializer
+        return self.serializer_per_action.get(
+            getattr(self, 'action', None), self.serializer_class
+        )
 
     def perform_update(self, serializer):
         instance = serializer.save()
@@ -58,9 +61,6 @@ class StudentChosenSubjectViewSets(viewsets.ModelViewSet):
             return CreateChosenSubjectSerializer
         return ChosenSubjectSerializer
 
-    def perform_create(self, serializer):
-        serializer.save(student=self.request.user.student_profile)
-
     def get_queryset(self):
         return ChosenSubject.objects.filter(student=self.request.user.student_profile)
 
@@ -78,8 +78,8 @@ class StudentViewSets(viewsets.ModelViewSet):
         "list": {"faculty", "first_name", "last_name",
                  "image", "mobile_number", "personal_id", "total_credits"},
         "update": {"image", "mobile_number"},
-        "create": {"user", "faculty", "first_name", "last_name", "gpa",
-                   "image", "mobile_number", "personal_id", "total_credits"}
+        "create": {"user", "faculty", "first_name", "last_name",
+                   "image", "mobile_number", "personal_id"}
     }
 
     def get_serializer(self, *args, **kwargs):

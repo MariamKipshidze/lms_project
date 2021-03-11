@@ -27,6 +27,15 @@ def user_registration(request):
     return Response(data)
 
 
+def user_registration_fun(data):
+    serializer = RegistrationSerializer(data=data)
+    if serializer.is_valid():
+        with transaction.atomic():
+            user = serializer.save()
+            var = Token.objects.create(user=user).key
+    return user
+
+
 class UserViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, IsOwner]
     queryset = User.objects.all()

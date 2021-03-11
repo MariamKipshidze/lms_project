@@ -18,8 +18,7 @@ urlpatterns = [
     path('chosen/subjects/detail/<int:pk>/', views.StudentChosenSubjectViewSets.as_view({'get': 'retrieve',
                                                                                          'delete': 'destroy'})),
 
-    path('chosen/subjects/update/<int:pk>/', views.ChosenSubjectViewSet.as_view({'get': 'retrieve',
-                                                                                 'post': 'update'})),
+    path('chosen/subjects/update/<int:pk>/', views.ChosenSubjectViewSet.as_view({'get': 'retrieve', 'post': 'update'})),
 
     path("", include(router.urls)),
 ]

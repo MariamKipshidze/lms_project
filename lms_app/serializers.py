@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import StudentProfile, LecturerProfile, Subject, Faculty, ChosenSubject
-from users.serializers import UserSerializer
+from users.views import user_registration_fun
+from users.serializers import RegistrationSerializer
 
 
 class DynamicFieldsModelSerializer(serializers.ModelSerializer):
@@ -22,13 +23,19 @@ class FacultySerializer(serializers.ModelSerializer):
 
     
 class StudentProfileSerializer(DynamicFieldsModelSerializer):
-    user = UserSerializer()
+    user = RegistrationSerializer()
     total_credits = serializers.IntegerField()
 
     class Meta:
         model = StudentProfile
-        fields = ["user", "faculty", "first_name", "last_name", "gpa", 
+        fields = ["user", "faculty", "first_name", "last_name", "gpa",
                   "image", "mobile_number", "personal_id", "total_credits"]
+
+    def create(self, validated_data):
+        user_data = validated_data.pop('user')
+        user = user_registration_fun(data=user_data)
+        student = StudentProfile.objects.create(user=user, **validated_data)
+        return student
 
 
 class LecturerProfileSerializer(DynamicFieldsModelSerializer):
@@ -46,14 +53,10 @@ class SubjectSerializer(serializers.ModelSerializer):
 class UpdateChosenSubjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChosenSubject
-        fields = ["student", "subject", "current_score"]
+        fields = ["current_score"]
 
 
 class CreateChosenSubjectSerializer(serializers.ModelSerializer):
-    # def __init__(self, faculty, *args, **kwargs):
-    #     super().__init__(*args, **kwargs)
-    #     self.fields['subject'].queryset = self.fields['subject'].queryset.filter(faculty=faculty)
-
     class Meta:
         model = ChosenSubject
         fields = ["subject"]
