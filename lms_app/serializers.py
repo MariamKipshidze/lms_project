@@ -48,7 +48,13 @@ class LecturerProfileSerializer(DynamicFieldsModelSerializer):
 
     class Meta:
         model = LecturerProfile
-        fields = ["user", "faculty", "first_name", "last_name", "mobile_number", "personal_id"]
+        fields = ["user", "faculty", "first_name", "last_name", "personal_id", "mobile_number", "salary"]
+
+    def create(self, validated_data):
+        user_data = validated_data.pop('user')
+        user = user_registration_fun(data=user_data)
+        lecturer = LecturerProfile.objects.create(user=user, **validated_data)
+        return lecturer
 
 
 class SubjectSerializer(serializers.ModelSerializer):

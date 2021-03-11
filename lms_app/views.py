@@ -4,8 +4,9 @@ from django.shortcuts import get_object_or_404
 from .models import StudentProfile, Subject, LecturerProfile, Faculty, ChosenSubject
 from .permissions import IsLecturer, IsStudent, IsFacultyLecturerOrReadOnly
 from .permissions import IsLecturerOrReadOnly
-from .serializers import StudentProfileSerializer, LecturerProfileSerializer, CreateChosenSubjectSerializer
-from .serializers import SubjectSerializer, FacultySerializer, UpdateChosenSubjectSerializer, ChosenSubjectSerializer
+from .serializers import StudentProfileSerializer, LecturerProfileSerializer
+from .serializers import SubjectSerializer, FacultySerializer, UpdateChosenSubjectSerializer
+from .serializers import CreateChosenSubjectSerializer, ChosenSubjectSerializer
 
 from rest_framework import generics, permissions
 from rest_framework import viewsets
@@ -65,7 +66,9 @@ class StudentChosenSubjectViewSets(viewsets.ModelViewSet):
         return ChosenSubject.objects.filter(student=self.request.user.student_profile)
 
     def get_object(self):
-        return get_object_or_404(ChosenSubject, student=self.request.user.student_profile, id=self.kwargs["pk"])
+        return get_object_or_404(ChosenSubject,
+                                 student=self.request.user.student_profile,
+                                 id=self.kwargs["pk"])
 
 
 class StudentViewSets(viewsets.ModelViewSet):
@@ -92,7 +95,8 @@ class StudentViewSets(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return StudentProfile.objects.annotate(
-            total_credits=Sum('subject__subject__credit_score', filter=Q(subject__passed=True))
+            total_credits=Sum('subject__subject__credit_score',
+                              filter=Q(subject__passed=True))
         )
 
 
@@ -106,7 +110,8 @@ class LecturerViewSets(viewsets.ModelViewSet):
     serializer_per_action = {
         "list": {"faculty", "first_name", "last_name", "mobile_number"},
         "update": {"mobile_number"},
-        "create": {"user", "faculty", "first_name", "last_name", "mobile_number", "personal_id"}
+        "create": {"user", "faculty", "first_name", "last_name",
+                   "personal_id", "salary", "mobile_number"}
     }
 
     def get_serializer(self, *args, **kwargs):
