@@ -2,7 +2,7 @@ from django.db.models import Sum, Q
 from django.shortcuts import get_object_or_404
 
 from .models import StudentProfile, Subject, LecturerProfile, Faculty, ChosenSubject
-from .permissions import IsOwnerOrReadOnly, IsLecturer, IsStudent, IsFacultyLecturerOrReadOnly
+from .permissions import IsLecturer, IsStudent, IsFacultyLecturerOrReadOnly
 from .permissions import IsLecturerOrReadOnly
 from .serializers import StudentProfileSerializer, LecturerProfileSerializer, CreateChosenSubjectSerializer
 from .serializers import SubjectSerializer, FacultySerializer, UpdateChosenSubjectSerializer, ChosenSubjectSerializer

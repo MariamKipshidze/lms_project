@@ -1,3 +1,4 @@
+from django.core.validators import RegexValidator
 from rest_framework import serializers
 from .models import StudentProfile, LecturerProfile, Subject, Faculty, ChosenSubject
 from users.views import user_registration_fun
@@ -25,6 +26,8 @@ class FacultySerializer(serializers.ModelSerializer):
 class StudentProfileSerializer(DynamicFieldsModelSerializer):
     user = RegistrationSerializer()
     total_credits = serializers.IntegerField()
+    personal_id = serializers.CharField(validators=[RegexValidator(r'^[0-9]{11}',
+                                        message='Personal ID must be 11 digits')])
 
     class Meta:
         model = StudentProfile
@@ -39,6 +42,10 @@ class StudentProfileSerializer(DynamicFieldsModelSerializer):
 
 
 class LecturerProfileSerializer(DynamicFieldsModelSerializer):
+    user = RegistrationSerializer()
+    personal_id = serializers.CharField(validators=[RegexValidator(r'^[0-9]{11}',
+                                        message='Personal ID must be 11 digits')])
+
     class Meta:
         model = LecturerProfile
         fields = ["user", "faculty", "first_name", "last_name", "mobile_number", "personal_id"]
