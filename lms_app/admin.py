@@ -19,7 +19,7 @@ class FacultyAdmin(admin.ModelAdmin):
 
 @admin.register(Subject)
 class SubjectAdmin(admin.ModelAdmin):
-    list_display = ["id", "name", "faculty", "syllabus"]
+    list_display = ["id", "name", "faculty", "credit_score", "syllabus"]
 
 
 @admin.register(ChosenSubject)

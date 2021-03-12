@@ -51,16 +51,18 @@ class ChosenSubjectViewSet(viewsets.ModelViewSet):
         instance.save()
 
         processed_points = ExpressionWrapper(
-            F('current_score') - 50,
+            (F('current_score') - 50)*F("subject__credit_score"),
             output_field=DecimalField())
 
         gpa_info = ChosenSubject.objects.filter(Q(passed=True), Q(student=instance.student)) \
             .annotate(points=processed_points) \
             .aggregate(
-            gpa=Avg('points'))
+            gpa=Sum('points'),
+            score_sum=Sum("subject__credit_score"),
+        )
 
         student = instance.student
-        student.gpa = (gpa_info["gpa"]) * 4 / 50
+        student.gpa = ((gpa_info["gpa"])/gpa_info["score_sum"]) * 4 / 50
         student.save()
 
 
