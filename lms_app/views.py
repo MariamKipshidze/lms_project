@@ -1,4 +1,4 @@
-from django.db.models import Sum, Q
+from django.db.models import Sum, Q, ExpressionWrapper, DecimalField, Avg, F
 from django.shortcuts import get_object_or_404
 
 from .models import StudentProfile, Subject, LecturerProfile, Faculty, ChosenSubject
@@ -50,6 +50,19 @@ class ChosenSubjectViewSet(viewsets.ModelViewSet):
 
         instance.save()
 
+        processed_points = ExpressionWrapper(
+            F('current_score') - 50,
+            output_field=DecimalField())
+
+        gpa_info = ChosenSubject.objects.filter(Q(passed=True), Q(student=instance.student)) \
+            .annotate(points=processed_points) \
+            .aggregate(
+            gpa=Avg('points'))
+
+        student = instance.student
+        student.gpa = (gpa_info["gpa"]) * 4 / 50
+        student.save()
+
 
 class StudentChosenSubjectViewSets(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, IsStudent]
@@ -78,7 +91,7 @@ class StudentViewSets(viewsets.ModelViewSet):
     filter_backends = [SearchFilter]
     search_fields = ['personal_id']
     serializer_per_action = {
-        "list": {"faculty", "first_name", "last_name",
+        "list": {"faculty", "first_name", "last_name", "gpa",
                  "image", "mobile_number", "personal_id", "total_credits"},
         "update": {"image", "mobile_number"},
         "create": {"user", "faculty", "first_name", "last_name",

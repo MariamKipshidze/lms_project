@@ -4,7 +4,7 @@ from .models import StudentProfile, LecturerProfile, Subject, Faculty, ChosenSub
 
 @admin.register(StudentProfile)
 class StudentProfileAdmin(admin.ModelAdmin):
-    list_display = ["user", "first_name", "last_name", "faculty"]
+    list_display = ["user", "first_name", "last_name", "gpa", "faculty"]
 
 
 @admin.register(LecturerProfile)
