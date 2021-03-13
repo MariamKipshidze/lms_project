@@ -1,12 +1,12 @@
-from django.db.models import Sum, Q, ExpressionWrapper, DecimalField, Avg, F
+from django.db.models import Sum, Q, ExpressionWrapper, DecimalField, F
 from django.shortcuts import get_object_or_404
 
-from .models import StudentProfile, Subject, LecturerProfile, Faculty, ChosenSubject
-from .permissions import IsLecturer, IsStudent, IsFacultyLecturerOrReadOnly
-from .permissions import IsLecturerOrReadOnly
-from .serializers import StudentProfileSerializer, LecturerProfileSerializer
-from .serializers import SubjectSerializer, FacultySerializer, UpdateChosenSubjectSerializer
-from .serializers import CreateChosenSubjectSerializer, ChosenSubjectSerializer
+from lms_app.models import StudentProfile, Subject, LecturerProfile, Faculty, ChosenSubject
+from lms_app.permissions import IsLecturer, IsStudent, IsFacultyLecturerOrReadOnly
+from lms_app.permissions import IsLecturerOrReadOnly
+from lms_app.serializers import StudentProfileSerializer, LecturerProfileSerializer
+from lms_app.serializers import SubjectSerializer, FacultySerializer, UpdateChosenSubjectSerializer
+from lms_app.serializers import CreateChosenSubjectSerializer, ChosenSubjectSerializer
 
 from rest_framework import generics, permissions
 from rest_framework import viewsets

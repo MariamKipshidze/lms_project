@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import StudentProfile, LecturerProfile, Subject, Faculty, ChosenSubject
+from lms_app.models import StudentProfile, LecturerProfile, Subject, Faculty, ChosenSubject
 
 
 @admin.register(StudentProfile)

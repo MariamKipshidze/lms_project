@@ -1,7 +1,7 @@
 from django.db import models
 
 from users.models import User
-from .choices import Grades
+from lms_app.choices import Grades
 
 from django.utils.translation import gettext_lazy as _
 from PIL import Image

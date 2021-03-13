@@ -1,8 +1,8 @@
 from django.db import transaction
 
-from .serializers import UserSerializer, RegistrationSerializer
-from .models import User
-from .permissions import IsOwner
+from users.serializers import UserSerializer, RegistrationSerializer
+from users.models import User
+from users.permissions import IsOwner
 from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
