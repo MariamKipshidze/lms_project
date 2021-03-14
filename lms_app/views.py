@@ -2,14 +2,10 @@ from django.db.models import Sum, Q, ExpressionWrapper, DecimalField, F
 from django.shortcuts import get_object_or_404
 
 from lms_app.models import StudentProfile, Subject, LecturerProfile, Faculty, ChosenSubject
-from lms_app.permissions import IsLecturer, IsStudent, IsFacultyLecturerOrReadOnly
-from lms_app.permissions import IsLecturerOrReadOnly
-from lms_app.serializers import StudentProfileSerializer, LecturerProfileSerializer
-from lms_app.serializers import SubjectSerializer, FacultySerializer, UpdateChosenSubjectSerializer
-from lms_app.serializers import CreateChosenSubjectSerializer, ChosenSubjectSerializer
-
-from rest_framework import generics, permissions
-from rest_framework import viewsets
+from lms_app.permissions import IsLecturer, IsStudent, IsFacultyLecturerOrReadOnly, IsLecturerOrReadOnly
+from lms_app.serializers import StudentProfileSerializer, LecturerProfileSerializer, SubjectSerializer, \
+    FacultySerializer, UpdateChosenSubjectSerializer, CreateChosenSubjectSerializer, ChosenSubjectSerializer
+from rest_framework import generics, permissions, viewsets
 from rest_framework.filters import SearchFilter
 
 
@@ -140,7 +136,7 @@ class LecturerViewSets(viewsets.ModelViewSet):
 
 class SubjectViewSets(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, IsLecturerOrReadOnly]
-    queryset = Subject.objects.all()
+    queryset = Subject.objects.prefetch_related("lecturer").all()
     serializer_class = SubjectSerializer
     filter_backends = [SearchFilter]
     search_fields = ['name']

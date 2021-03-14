@@ -20,7 +20,7 @@ class DynamicFieldsModelSerializer(serializers.ModelSerializer):
 class FacultySerializer(serializers.ModelSerializer):
     class Meta:
         model = Faculty
-        fields = ["name", "student"]
+        fields = ["name", "description", "price"]
 
     
 class StudentProfileSerializer(DynamicFieldsModelSerializer):

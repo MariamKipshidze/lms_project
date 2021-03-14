@@ -3,10 +3,9 @@ from django.db import transaction
 from users.serializers import UserSerializer, RegistrationSerializer
 from users.models import User
 from users.permissions import IsOwner
-from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from rest_framework import viewsets, generics
+from rest_framework import viewsets, generics, permissions
 from rest_framework.authtoken.models import Token
 from rest_framework.filters import SearchFilter, OrderingFilter
 
