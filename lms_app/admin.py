@@ -1,4 +1,5 @@
 from django.contrib import admin
+from adminsortable2.admin import SortableAdminMixin
 from lms_app.models import StudentProfile, LecturerProfile, Subject, Faculty, ChosenSubject
 
 
@@ -13,8 +14,8 @@ class LecturerProfileAdmin(admin.ModelAdmin):
 
 
 @admin.register(Faculty)
-class FacultyAdmin(admin.ModelAdmin):
-    list_display = ["name"]
+class FacultyAdmin(SortableAdminMixin, admin.ModelAdmin):
+    list_display = ["name", "price"]
 
 
 @admin.register(Subject)

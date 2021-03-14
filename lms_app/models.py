@@ -17,6 +17,7 @@ class Faculty(models.Model):
     class Meta:
         verbose_name = _('Faculty')
         verbose_name_plural = _('Faculties')
+        ordering = ['id']
 
 
 class Subject(models.Model):
