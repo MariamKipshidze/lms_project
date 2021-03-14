@@ -143,11 +143,17 @@ class SubjectViewSets(viewsets.ModelViewSet):
 
 
 class FacultyViewSets(viewsets.ModelViewSet):
-    permission_classes = [IsFacultyLecturerOrReadOnly]
     queryset = Faculty.objects.all()
     serializer_class = FacultySerializer
     filter_backends = [SearchFilter]
     search_fields = ['name']
+
+    def get_permissions(self):
+        if self.action == 'list':
+            permission_classes = []
+        else:
+            permission_classes = [permissions.IsAuthenticated, IsFacultyLecturerOrReadOnly]
+        return [permission() for permission in permission_classes]
 
 
 class StudentFacultySubjectList(generics.ListAPIView):

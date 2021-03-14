@@ -22,7 +22,7 @@ class FacultySerializer(serializers.ModelSerializer):
         model = Faculty
         fields = ["name", "description", "price"]
 
-    
+
 class StudentProfileSerializer(DynamicFieldsModelSerializer):
     user = RegistrationSerializer()
     total_credits = serializers.IntegerField()

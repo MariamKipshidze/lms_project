@@ -6,7 +6,6 @@ router = DefaultRouter()
 router.register(r'students', views.StudentViewSets)
 router.register(r'lecturer', views.LecturerViewSets)
 router.register(r'subjects', views.SubjectViewSets)
-router.register(r'faculty', views.FacultyViewSets)
 
 app_name = "lms_app"
 
@@ -19,6 +18,10 @@ urlpatterns = [
                                                                                          'delete': 'destroy'})),
 
     path('chosen/subjects/update/<int:pk>/', views.ChosenSubjectViewSet.as_view({'get': 'retrieve', 'post': 'update'})),
+
+    path('faculties/', views.FacultyViewSets.as_view({'get': 'list'})),
+    path('faculties/<int:pk>/', views.FacultyViewSets.as_view({'get': 'retrieve', 'post': 'update',
+                                                               'delete': 'destroy'})),
 
     path("", include(router.urls)),
 ]

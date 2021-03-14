@@ -26,7 +26,7 @@ class Subject(models.Model):
     syllabus = models.FileField(upload_to="files/syllabus", verbose_name=_('Syllabus'), blank=True, null=True)
     credit_score = models.SmallIntegerField(verbose_name=_("Credit Score"))
     score = models.SmallIntegerField(verbose_name=_("Score"), default=100)
-    lecturer = models.ManyToManyField(User, verbose_name=_("Lecturer"))
+    lecturer = models.ManyToManyField(User, verbose_name=_("Lecturer"), related_name="subject")
 
     def __str__(self):
         return self.name
