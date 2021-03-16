@@ -20,6 +20,14 @@ class Faculty(models.Model):
         ordering = ['id']
 
 
+class Campus(models.Model):
+    location = models.CharField(max_length=50, verbose_name=_("Faculty name"))
+    faculty = models.ManyToManyField(Faculty, related_name=_("Faculty"), verbose_name="campus")
+
+    def __str__(self):
+        return self.location
+
+
 class Subject(models.Model):
     name = models.CharField(max_length=30, verbose_name=_("Subject name"))
     faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE, verbose_name=_("Faculty"))

@@ -1,10 +1,11 @@
 from django.db.models import Sum, Q, ExpressionWrapper, DecimalField, F
 from django.shortcuts import get_object_or_404
 
-from lms_app.models import StudentProfile, Subject, LecturerProfile, Faculty, ChosenSubject
+from lms_app.models import StudentProfile, Subject, LecturerProfile, Faculty, ChosenSubject, Campus
 from lms_app.permissions import IsLecturer, IsStudent, IsFacultyLecturerOrReadOnly, IsLecturerOrReadOnly
 from lms_app.serializers import StudentProfileSerializer, LecturerProfileSerializer, SubjectSerializer, \
-    FacultySerializer, UpdateChosenSubjectSerializer, CreateChosenSubjectSerializer, ChosenSubjectSerializer
+    FacultySerializer, UpdateChosenSubjectSerializer, CreateChosenSubjectSerializer, ChosenSubjectSerializer, \
+    CampusSerializer
 from rest_framework import generics, permissions, viewsets
 from rest_framework.filters import SearchFilter
 
@@ -163,3 +164,8 @@ class StudentFacultySubjectList(generics.ListAPIView):
     def get_queryset(self):
         faculty = self.request.user.student_profile.faculty
         return Subject.objects.filter(faculty=faculty)
+
+
+class CampusViewSets(viewsets.ModelViewSet):
+    queryset = Campus.objects.all()
+    serializer_class = CampusSerializer

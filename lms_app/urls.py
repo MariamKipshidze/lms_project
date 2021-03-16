@@ -6,6 +6,7 @@ router = DefaultRouter()
 router.register(r'students', views.StudentViewSets)
 router.register(r'lecturer', views.LecturerViewSets)
 router.register(r'subjects', views.SubjectViewSets)
+router.register(r'campus', views.CampusViewSets)
 
 app_name = "lms_app"
 

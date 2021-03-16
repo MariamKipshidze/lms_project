@@ -1,6 +1,6 @@
 from django.core.validators import RegexValidator
 from rest_framework import serializers
-from lms_app.models import StudentProfile, LecturerProfile, Subject, Faculty, ChosenSubject
+from lms_app.models import StudentProfile, LecturerProfile, Subject, Faculty, ChosenSubject, Campus
 from users.views import user_registration_fun
 from users.serializers import RegistrationSerializer
 
@@ -21,6 +21,14 @@ class FacultySerializer(serializers.ModelSerializer):
     class Meta:
         model = Faculty
         fields = ["name", "description", "price"]
+
+
+class CampusSerializer(serializers.ModelSerializer):
+    faculty = FacultySerializer(many=True)
+
+    class Meta:
+        model = Campus
+        fields = ["location", "faculty"]
 
 
 class StudentProfileSerializer(DynamicFieldsModelSerializer):
