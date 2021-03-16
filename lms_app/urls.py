@@ -19,7 +19,7 @@ urlpatterns = [
 
     path('chosen/subjects/update/<int:pk>/', views.ChosenSubjectViewSet.as_view({'get': 'retrieve', 'post': 'update'})),
 
-    path('faculties/', views.FacultyViewSets.as_view({'get': 'list'})),
+    path('faculties/', views.FacultyViewSets.as_view({'get': 'list', 'post': 'create'})),
     path('faculties/<int:pk>/', views.FacultyViewSets.as_view({'get': 'retrieve', 'post': 'update',
                                                                'delete': 'destroy'})),
 

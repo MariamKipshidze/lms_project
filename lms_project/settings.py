@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 
     'debug_toolbar',
     'adminsortable2',
+    'rest_framework_swagger',
 ]
 
 INTERNAL_IPS = [
@@ -58,6 +59,7 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 3,
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'
 }
 
 MIDDLEWARE = [
@@ -86,6 +88,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+        'libraries': {
+                    'staticfiles': 'django.templatetags.static',
+                 },
         },
     },
 ]
