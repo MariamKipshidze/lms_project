@@ -30,6 +30,17 @@ class CampusSerializer(serializers.ModelSerializer):
         model = Campus
         fields = ["location", "faculty"]
 
+    def create(self, validated_data):
+        faculties = validated_data.pop('faculty')
+        campus = Campus.objects.create(**validated_data)
+        faculty_list = []
+        for faculty in faculties:
+            faculty_list.append(Faculty.objects.create(**faculty))
+        # faculty = [Faculty(**faculty) for faculty in faculties]
+        # faculty_list = Faculty.objects.bulk_create(faculty)
+        campus.faculty.set(faculty_list)
+        return campus
+
 
 class StudentProfileSerializer(DynamicFieldsModelSerializer):
     user = RegistrationSerializer()

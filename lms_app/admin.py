@@ -1,6 +1,6 @@
 from django.contrib import admin
 from adminsortable2.admin import SortableAdminMixin
-from lms_app.models import StudentProfile, LecturerProfile, Subject, Faculty, ChosenSubject
+from lms_app.models import StudentProfile, LecturerProfile, Subject, Faculty, ChosenSubject, Campus
 
 
 @admin.register(StudentProfile)
@@ -16,6 +16,11 @@ class LecturerProfileAdmin(admin.ModelAdmin):
 @admin.register(Faculty)
 class FacultyAdmin(SortableAdminMixin, admin.ModelAdmin):
     list_display = ["name", "price"]
+
+
+@admin.register(Campus)
+class CampusAdmin(admin.ModelAdmin):
+    list_display = ["location"]
 
 
 @admin.register(Subject)

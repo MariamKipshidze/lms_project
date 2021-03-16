@@ -21,7 +21,7 @@ class Faculty(models.Model):
 
 
 class Campus(models.Model):
-    location = models.CharField(max_length=50, verbose_name=_("Faculty name"))
+    location = models.CharField(max_length=50, verbose_name=_("Location"))
     faculty = models.ManyToManyField(Faculty, related_name=_("Faculty"), verbose_name="campus")
 
     def __str__(self):
