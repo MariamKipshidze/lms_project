@@ -7,7 +7,7 @@ from PIL import Image
 
 
 class Faculty(models.Model):
-    name = models.CharField(max_length=50, verbose_name=_("Faculty name"))
+    name = models.CharField(max_length=50, verbose_name=_("Faculty name"), unique=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_('Price'))
     description = models.TextField(verbose_name=_("Description"))
 
@@ -21,11 +21,16 @@ class Faculty(models.Model):
 
 
 class Campus(models.Model):
-    location = models.CharField(max_length=50, verbose_name=_("Location"))
+    location = models.CharField(max_length=50, verbose_name=_("Location"), unique=True)
     faculty = models.ManyToManyField(Faculty, related_name=_("Faculty"), verbose_name="campus")
+    order = models.SmallIntegerField(verbose_name=_('Order'), null=True, blank=True)
 
     def __str__(self):
         return self.location
+
+    class Meta:
+        verbose_name = _('Campus')
+        verbose_name_plural = _('Campuses')
 
 
 class Subject(models.Model):

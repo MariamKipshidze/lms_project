@@ -1,11 +1,13 @@
 from django.db.models import Sum, Q, ExpressionWrapper, DecimalField, F
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
+from rest_framework.decorators import action
 
 from lms_app.models import StudentProfile, Subject, LecturerProfile, Faculty, ChosenSubject, Campus
 from lms_app.permissions import IsLecturer, IsStudent, IsFacultyLecturerOrReadOnly, IsLecturerOrReadOnly
 from lms_app.serializers import StudentProfileSerializer, LecturerProfileSerializer, SubjectSerializer, \
     FacultySerializer, UpdateChosenSubjectSerializer, CreateChosenSubjectSerializer, ChosenSubjectSerializer, \
-    CampusSerializer
+    CampusSerializer, CampusOrderSerializer
 from rest_framework import generics, permissions, viewsets
 from rest_framework.filters import SearchFilter
 
@@ -69,8 +71,8 @@ class StudentChosenSubjectViewSets(viewsets.ModelViewSet):
     search_fields = ['subject__name']
 
     def get_serializer_class(self):
-        action = getattr(self, "action", None)
-        if action == "create":
+        get_action = getattr(self, "action", None)
+        if get_action == "create":
             return CreateChosenSubjectSerializer
         return ChosenSubjectSerializer
 
@@ -167,5 +169,22 @@ class StudentFacultySubjectList(generics.ListAPIView):
 
 
 class CampusViewSets(viewsets.ModelViewSet):
-    queryset = Campus.objects.all()
-    serializer_class = CampusSerializer
+    queryset = Campus.objects.order_by("order")
+
+    def get_serializer_class(self):
+        get_action = getattr(self, "action", None)
+        if get_action == "change_order":
+            return CampusOrderSerializer
+        return CampusSerializer
+
+    @action(detail=False, methods=['post'])
+    def change_order(self, request):
+        serializer = CampusOrderSerializer(data=request.data, many=True)
+        serializer.is_valid(raise_exception=True)
+        campus_list = []
+        for order, campus in enumerate(serializer.validated_data):
+            campus_obj = Campus(id=campus['id'], order=order)
+            campus_list.append(campus_obj)
+        Campus.objects.bulk_update(campus_list, ['order'])
+
+        return HttpResponseRedirect(redirect_to='http://localhost:8000/campus/')

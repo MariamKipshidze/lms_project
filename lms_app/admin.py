@@ -20,7 +20,7 @@ class FacultyAdmin(SortableAdminMixin, admin.ModelAdmin):
 
 @admin.register(Campus)
 class CampusAdmin(admin.ModelAdmin):
-    list_display = ["location"]
+    list_display = ["id", "location"]
 
 
 @admin.register(Subject)
