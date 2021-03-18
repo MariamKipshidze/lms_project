@@ -1,4 +1,4 @@
-from django.db.models import Sum, Q, ExpressionWrapper, DecimalField, F
+from django.db.models import Sum, Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import action
@@ -24,45 +24,6 @@ class ChosenSubjectViewSet(viewsets.ModelViewSet):
         return self.serializer_per_action.get(
             getattr(self, 'action', None), self.serializer_class
         )
-
-    def perform_update(self, serializer):
-        instance = serializer.save()
-        current_score = instance.current_score
-        instance.passed = False
-        instance.grades = 6
-
-        if current_score > 90:
-            instance.passed = True
-            instance.grades = 1
-        elif current_score > 80:
-            instance.passed = True
-            instance.grades = 2
-        elif current_score > 70:
-            instance.passed = True
-            instance.grades = 3
-        elif current_score > 60:
-            instance.passed = True
-            instance.grades = 4
-        elif current_score > 50:
-            instance.passed = True
-            instance.grades = 5
-
-        instance.save()
-
-        processed_points = ExpressionWrapper(
-            (F('current_score') - 50)*F("subject__credit_score"),
-            output_field=DecimalField())
-
-        gpa_info = ChosenSubject.objects.filter(Q(passed=True), Q(student=instance.student)) \
-            .annotate(points=processed_points) \
-            .aggregate(
-            gpa=Sum('points'),
-            score_sum=Sum("subject__credit_score"),
-        )
-
-        student = instance.student
-        student.gpa = ((gpa_info["gpa"])/gpa_info["score_sum"]) * 4 / 50
-        student.save()
 
 
 class StudentChosenSubjectViewSets(viewsets.ModelViewSet):

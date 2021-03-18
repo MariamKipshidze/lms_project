@@ -1,5 +1,6 @@
 from django.core.validators import RegexValidator
 from django.db import transaction
+from django.db.models import Sum, Q, ExpressionWrapper, DecimalField, F
 from rest_framework import serializers
 from lms_app.models import StudentProfile, LecturerProfile, Subject, Faculty, ChosenSubject, Campus
 from users.views import user_registration_fun
@@ -68,9 +69,6 @@ class LecturerProfileSerializer(DynamicFieldsModelSerializer):
     personal_id = serializers.CharField(validators=[RegexValidator(r'^[0-9]{11}',
                                         message='Personal ID must be 11 digits')])
 
-    # def to_representation(self, instance):
-    #     return instance.email
-
     class Meta:
         model = LecturerProfile
         fields = ["user", "faculty", "first_name", "last_name", "personal_id", "mobile_number", "salary"]
@@ -84,6 +82,9 @@ class LecturerProfileSerializer(DynamicFieldsModelSerializer):
 
 
 class SubjectSerializer(serializers.ModelSerializer):
+    faculty = serializers.StringRelatedField()
+    lecturer = serializers.StringRelatedField(many=True)
+
     class Meta:
         model = Subject
         fields = ["name", "faculty", "credit_score", "lecturer", "syllabus"]
@@ -94,8 +95,51 @@ class UpdateChosenSubjectSerializer(serializers.ModelSerializer):
         model = ChosenSubject
         fields = ["current_score"]
 
+    def update(self, instance, validated_data):
+        current_score = validated_data["current_score"]
+        instance.current_score = current_score
+        instance.passed = False
+        instance.grades = 6
+
+        if current_score > 90:
+            instance.passed = True
+            instance.grades = 1
+        elif current_score > 80:
+            instance.passed = True
+            instance.grades = 2
+        elif current_score > 70:
+            instance.passed = True
+            instance.grades = 3
+        elif current_score > 60:
+            instance.passed = True
+            instance.grades = 4
+        elif current_score > 50:
+            instance.passed = True
+            instance.grades = 5
+
+        instance.save()
+
+        processed_points = ExpressionWrapper(
+            (F('current_score') - 50) * F("subject__credit_score"),
+            output_field=DecimalField())
+
+        gpa_info = ChosenSubject.objects.filter(Q(passed=True), Q(student=instance.student)) \
+            .annotate(points=processed_points) \
+            .aggregate(
+            gpa=Sum('points'),
+            score_sum=Sum("subject__credit_score"),
+        )
+
+        student = instance.student
+        if gpa_info["score_sum"]:
+            student.gpa = ((gpa_info["gpa"]) / gpa_info["score_sum"]) * 4 / 50
+        student.save()
+        return instance
+
 
 class CreateChosenSubjectSerializer(serializers.ModelSerializer):
+    subject = serializers.StringRelatedField()
+
     class Meta:
         model = ChosenSubject
         fields = ["subject"]
