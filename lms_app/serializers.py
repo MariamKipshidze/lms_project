@@ -45,16 +45,25 @@ class CampusSerializer(serializers.ModelSerializer):
         return campus
 
 
+class CampusOrderSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+
+
 class StudentProfileSerializer(DynamicFieldsModelSerializer):
     user = RegistrationSerializer()
     total_credits = serializers.IntegerField()
     personal_id = serializers.CharField(validators=[RegexValidator(r'^[0-9]{11}',
                                         message='Personal ID must be 11 digits')])
+    subject_count = serializers.SerializerMethodField("get_subject_count")
 
     class Meta:
         model = StudentProfile
         fields = ["user", "faculty", "first_name", "last_name", "gpa",
-                  "image", "mobile_number", "personal_id", "total_credits"]
+                  "image", "mobile_number", "personal_id", "total_credits", "subject_count"]
+
+    @staticmethod
+    def get_subject_count(obj):
+        return obj.subject.count()
 
     def create(self, validated_data):
         with transaction.atomic():
@@ -138,8 +147,6 @@ class UpdateChosenSubjectSerializer(serializers.ModelSerializer):
 
 
 class CreateChosenSubjectSerializer(serializers.ModelSerializer):
-    subject = serializers.StringRelatedField()
-
     class Meta:
         model = ChosenSubject
         fields = ["subject"]
@@ -151,7 +158,3 @@ class ChosenSubjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChosenSubject
         fields = ["student", "subject", "current_score", "passed", "grades"]
-
-
-class CampusOrderSerializer(serializers.Serializer):
-    id = serializers.IntegerField()

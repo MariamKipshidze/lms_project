@@ -2,6 +2,7 @@ from django.db.models import Sum, Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import action
+from rest_framework.exceptions import ValidationError
 
 from lms_app.models import StudentProfile, Subject, LecturerProfile, Faculty, ChosenSubject, Campus
 from lms_app.permissions import IsLecturer, IsStudent, IsFacultyLecturerOrReadOnly, IsLecturerOrReadOnly
@@ -10,6 +11,8 @@ from lms_app.serializers import StudentProfileSerializer, LecturerProfileSeriali
     CampusSerializer, CampusOrderSerializer
 from rest_framework import generics, permissions, viewsets
 from rest_framework.filters import SearchFilter
+
+from rest_framework.response import Response
 
 
 class ChosenSubjectViewSet(viewsets.ModelViewSet):
@@ -37,6 +40,12 @@ class StudentChosenSubjectViewSets(viewsets.ModelViewSet):
             return CreateChosenSubjectSerializer
         return ChosenSubjectSerializer
 
+    def perform_create(self, serializer):
+        if ChosenSubject.objects.filter(Q(passed=False), Q(student=self.request.user.student_profile)).count() < 6:
+            serializer.save(student=self.request.user.student_profile)
+            return Response(serializer.data)
+        raise ValidationError('You can not choose more then 6 subjects')
+
     def get_queryset(self):
         return ChosenSubject.objects.filter(student=self.request.user.student_profile)
 
@@ -54,7 +63,7 @@ class StudentViewSets(viewsets.ModelViewSet):
     search_fields = ['personal_id']
     serializer_per_action = {
         "list": {"faculty", "first_name", "last_name", "gpa",
-                 "image", "mobile_number", "personal_id", "total_credits"},
+                 "image", "mobile_number", "personal_id", "total_credits", "subject_count"},
         "update": {"image", "mobile_number"},
         "create": {"user", "faculty", "first_name", "last_name",
                    "image", "mobile_number", "personal_id"}
