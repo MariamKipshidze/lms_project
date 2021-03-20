@@ -85,7 +85,7 @@ class ChosenSubject(models.Model):
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE, verbose_name=_("Subject"))
     current_score = models.SmallIntegerField(verbose_name=_("Current Score"), default=0)
     passed = models.BooleanField(verbose_name=_('Passed'), default=False)
-    grades = models.PositiveSmallIntegerField(choices=Grades.choices, default=6)
+    grades = models.PositiveSmallIntegerField(choices=Grades.choices, default=0)
 
     def __str__(self):
         return self.subject.name

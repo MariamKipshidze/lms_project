@@ -109,7 +109,7 @@ class LecturerViewSets(viewsets.ModelViewSet):
 
 class SubjectViewSets(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, IsLecturerOrReadOnly]
-    queryset = Subject.objects.prefetch_related("lecturer").all()
+    queryset = Subject.objects.prefetch_related("lecturer")
     serializer_class = SubjectSerializer
     filter_backends = [SearchFilter]
     search_fields = ['name']
@@ -149,9 +149,9 @@ class CampusViewSets(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['post'])
     def change_order(self, request):
+        campus_list = []
         serializer = CampusOrderSerializer(data=request.data, many=True)
         serializer.is_valid(raise_exception=True)
-        campus_list = []
         for order, campus in enumerate(serializer.validated_data):
             campus_obj = Campus(id=campus['id'], order=order)
             campus_list.append(campus_obj)

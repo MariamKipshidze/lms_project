@@ -2,9 +2,9 @@ from django.db.models import IntegerChoices
 
 
 class Grades(IntegerChoices):
-    A = 1,
-    B = 2,
+    A = 5,
+    B = 4,
     C = 3,
-    D = 4,
-    E = 5,
-    F = 6,
+    D = 2,
+    E = 1,
+    F = 0,

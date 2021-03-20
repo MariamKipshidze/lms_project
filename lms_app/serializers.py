@@ -110,21 +110,9 @@ class UpdateChosenSubjectSerializer(serializers.ModelSerializer):
         instance.passed = False
         instance.grades = 6
 
-        if current_score > 90:
+        if current_score > 50:
             instance.passed = True
-            instance.grades = 1
-        elif current_score > 80:
-            instance.passed = True
-            instance.grades = 2
-        elif current_score > 70:
-            instance.passed = True
-            instance.grades = 3
-        elif current_score > 60:
-            instance.passed = True
-            instance.grades = 4
-        elif current_score > 50:
-            instance.passed = True
-            instance.grades = 5
+            instance.grades = ((current_score - 1) // 10) - 4
 
         instance.save()
 
